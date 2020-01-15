@@ -2,7 +2,6 @@
          pageEncoding="ISO-8859-1" isELIgnored="false" %>
 <%@taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
-
 <!DOCTYPE html>
 <html>
 <head>
@@ -34,14 +33,12 @@
             <td>
                 <form method="GET" action="${pageContext.request.contextPath}/updatePage">
                     <input type="hidden" value="${user.id}" name="userId"/>
-<%--                    <c:param name="userId" value="${user.id}"/>--%>
                     <input type="submit" value="Update">
                 </form>
             </td>
             <td>
                 <form action="${pageContext.request.contextPath}/delete" method="POST">
                     <input type="hidden" value="${user.id}" name="userId"/>
-<%--                    <c:param name="userId" value="${user.id}"/>--%>
                     <input type="submit" value="Delete">
                 </form>
             </td>
