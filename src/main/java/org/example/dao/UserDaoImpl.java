@@ -3,7 +3,8 @@ package org.example.dao;
 import org.example.model.User;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Repository;
 
 import javax.persistence.TypedQuery;
@@ -12,20 +13,27 @@ import java.util.List;
 @Repository
 public class UserDaoImpl implements UserDao {
 
-    @Autowired
-    private SessionFactory sessionFactory;
+    private final SessionFactory sessionFactory;
 
-    @Override
-    public List<User> getUsers() {
-        @SuppressWarnings("unchecked")
-        TypedQuery<User> query =
-                sessionFactory.getCurrentSession().createQuery("from User");
-        return query.getResultList();
+    public UserDaoImpl(SessionFactory sessionFactory) {
+        this.sessionFactory = sessionFactory;
     }
 
     @Override
-    public User getUser(long id) {
-        return sessionFactory.getCurrentSession().byId(User.class).load(id);
+    public List<User> getUsers() {
+//        @SuppressWarnings("unchecked")
+//        TypedQuery<User> query =
+//                sessionFactory.getCurrentSession().createQuery("from User");
+//        return query.getResultList();
+        return (List<User>) sessionFactory.getCurrentSession().createQuery("from User").list();
+    }
+
+    @Override
+    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+        return (User) sessionFactory.getCurrentSession()
+                .createQuery("from User u where u.username =:username")
+                .setParameter("username", username)
+                .uniqueResult();
     }
 
     @Override
