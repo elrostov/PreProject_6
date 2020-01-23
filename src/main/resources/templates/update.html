@@ -1,0 +1,29 @@
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org"
+      lang="en">
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Update user</title>
+    <meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+    <link rel="stylesheet" type="text/css"
+          href="../css/formStyle.css"
+          th:href="@{/css/formStyle.css}">
+</head>
+<body>
+<div class="form-style-6">
+    <h1>Update user:
+        <strong>
+            <span th:text="${user.username}"></span>
+        </strong><br/></h1>
+    <form method="POST" action="/admin/update">
+        <input type="hidden" name="id" th:value="${user.id}" th:valuetype="Long"/>
+        <input type="text" name="username" th:value="${user.username}"/>
+        <input type="text" name="password" /><br><br>
+        <label><input name="USER" type="checkbox" value="USER" checked>USER</label><br><br>
+        <label><input name="ADMIN" type="checkbox" value="ADMIN">ADMIN</label><br><br>
+        <input type="submit" value="Update">
+    </form>
+</div>
+</body>
+</html>

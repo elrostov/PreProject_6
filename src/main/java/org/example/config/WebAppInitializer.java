@@ -9,12 +9,12 @@ public class WebAppInitializer
 
     @Override
     protected Class<?>[] getRootConfigClasses() {
-        return new Class[] { HibernateConfig.class, SecurityConfig.class };
+        return new Class[] { SecurityConfig.class, HibernateConfig.class };
     }
 
     @Override
     protected Class<?>[] getServletConfigClasses() {
-        return new Class[] { WebMvcConfig.class };
+        return new Class[] {  };
     }
 
     @Override

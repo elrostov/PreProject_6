@@ -5,6 +5,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 
 import javax.persistence.*;
 import java.util.*;
+import java.util.stream.Collectors;
 
 @Entity
 @Table(name = "users")
@@ -22,6 +23,14 @@ public class User implements UserDetails {
     private String password;
 
     @ManyToMany(fetch = FetchType.EAGER, cascade = {CascadeType.PERSIST, CascadeType.MERGE})
+    @JoinTable(name = "users_roles",
+        joinColumns = @JoinColumn(
+                name = "user_id",
+                referencedColumnName = "id"),
+        inverseJoinColumns = @JoinColumn(
+                name = "role_id",
+                referencedColumnName = "id")
+    )
     private Set<Role> roles = new LinkedHashSet<>();
 
     public User(){}
@@ -96,5 +105,16 @@ public class User implements UserDetails {
     @Override
     public int hashCode() {
         return Objects.hash(username);
+    }
+
+    @Override
+    public String toString() {
+        return "User{" +
+                "id=" + id +
+                ", username='" + username + '\'' +
+                ", password='" + password + '\'' +
+                ", roles=" +
+                roles.stream().map(Role::getName).collect(Collectors.joining("; ")) +
+                '}';
     }
 }

@@ -7,6 +7,8 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Repository;
 
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
 import javax.persistence.TypedQuery;
 import java.util.List;
 
@@ -21,10 +23,6 @@ public class UserDaoImpl implements UserDao {
 
     @Override
     public List<User> getUsers() {
-//        @SuppressWarnings("unchecked")
-//        TypedQuery<User> query =
-//                sessionFactory.getCurrentSession().createQuery("from User");
-//        return query.getResultList();
         return (List<User>) sessionFactory.getCurrentSession().createQuery("from User").list();
     }
 

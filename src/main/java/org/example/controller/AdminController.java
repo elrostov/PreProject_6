@@ -56,6 +56,7 @@ public class AdminController {
                              @RequestParam(value = "ADMIN",
                                            required = false) String adminRole, Model model) {
         setRoles(user, userRole, adminRole);
+        System.out.println(user.toString());
         model.addAttribute("user", user);
         return "update";
     }

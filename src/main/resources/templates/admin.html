@@ -1,0 +1,63 @@
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org"
+      lang="en">
+<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+    <link rel="stylesheet" type="text/css"
+          href="../css/style.css"
+          th:href="@{/css/style.css}">
+    <title>Admin page</title>
+</head>
+<body>
+
+<form th:action="@{/logout}" method="POST">
+    <input type="submit" value="Logout"/>
+</form>
+
+<form action="/admin/register" method="GET">
+    <input type="submit" value="Register user">
+</form>
+
+<table>
+    <tr>
+        <th>ID</th>
+        <th>Name</th>
+        <th>Password</th>
+        <th>Role(s)</th>
+        <th>Update user</th>
+        <th>Delete user</th>
+    </tr>
+    <th:block th:each="user : ${usersList}">
+        <tr>
+            <td th:text="${user.id}"></td>
+            <td th:text="${user.username}"></td>
+            <td th:text="${user.password}"></td>
+            <td>
+                <th:block th:each="role : ${user.roles}">
+                    <span th:text="${role.name}"></span><br>
+                </th:block>
+            </td>
+            <td>
+                <form method="GET" action="/admin/update">
+                    <input type="hidden" th:value="${user.id}" th:valuetype="Long" name="id"/>
+                    <input type="hidden" th:value="${user.username}" th:valuetype="String" name="username"/>
+                    <input type="hidden" th:value="${user.password}" th:valuetype="String" name="password"/>
+                    <th:block th:each="role : ${user.roles}">
+                        <input type="hidden" th:value="${role.name}" th:name="${role.name}"/>
+                    </th:block>
+                    <input type="submit" value="Update">
+                </form>
+            </td>
+            <td>
+                <form action="/admin/delete" method="POST">
+                    <input type="hidden" th:value="${user.id}" th:valuetype="Long"  name="userId"/>
+                    <input type="submit" value="Delete">
+                </form>
+            </td>
+        </tr>
+    </th:block>
+</table>
+</body>
+</html>
