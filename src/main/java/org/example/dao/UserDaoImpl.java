@@ -1,53 +1,47 @@
 package org.example.dao;
 
 import org.example.model.User;
-import org.hibernate.Session;
-import org.hibernate.SessionFactory;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Repository;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
-import javax.persistence.TypedQuery;
 import java.util.List;
 
 @Repository
 public class UserDaoImpl implements UserDao {
 
-    private final SessionFactory sessionFactory;
-
-    public UserDaoImpl(SessionFactory sessionFactory) {
-        this.sessionFactory = sessionFactory;
-    }
+    @PersistenceContext
+    private EntityManager entityManager;
 
     @Override
     public List<User> getUsers() {
-        return (List<User>) sessionFactory.getCurrentSession().createQuery("from User").list();
+        return (List<User>) entityManager.createQuery("from User").getResultList();
+//        return (List<User>) sessionFactory.getCurrentSession().createQuery("from User").list();
     }
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        return (User) sessionFactory.getCurrentSession()
+        return (User) entityManager
                 .createQuery("from User u where u.username =:username")
                 .setParameter("username", username)
-                .uniqueResult();
+                .getSingleResult();
     }
 
     @Override
     public void updateUser(User user) {
-        sessionFactory.getCurrentSession().update(user);
+        entityManager.merge(user);
     }
 
     @Override
     public void saveUser(User user) {
-        sessionFactory.getCurrentSession().save(user);
+        entityManager.persist(user);
     }
 
     @Override
     public void deleteUser(long id) {
-        Session session = sessionFactory.getCurrentSession();
-        User user = session.byId(User.class).load(id);
-        session.delete(user);
+        User user = entityManager.find(User.class, id);
+        entityManager.remove(user);
     }
 }

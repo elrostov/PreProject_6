@@ -1,23 +1,22 @@
 package org.example.dao;
 
 import org.example.model.Role;
-import org.hibernate.SessionFactory;
 import org.springframework.stereotype.Repository;
+
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
 
 @Repository
 public class RoleDaoImpl implements RoleDao {
 
-    private final SessionFactory sessionFactory;
-
-    public RoleDaoImpl(SessionFactory sessionFactory) {
-        this.sessionFactory = sessionFactory;
-    }
+    @PersistenceContext
+    private EntityManager entityManager;
 
     @Override
     public Role getRole(String roleName) {
-        return (Role) sessionFactory.getCurrentSession()
+        return (Role) entityManager
                 .createQuery("from Role r where r.name =:roleName")
                 .setParameter("roleName", roleName)
-                .uniqueResult();
+                .getSingleResult();
     }
 }
