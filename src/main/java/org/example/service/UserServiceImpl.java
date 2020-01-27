@@ -30,15 +30,6 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        UserDetails userDetails = userDao.loadUserByUsername(username);
-        if (userDetails == null) {
-            throw new UsernameNotFoundException("User not found");
-        }
-        return userDetails;
-    }
-
-    @Override
     public void saveUser(User user) {
         String hashPassword = passwordEncoder.encode(user.getPassword());
         user.setPassword(hashPassword);
