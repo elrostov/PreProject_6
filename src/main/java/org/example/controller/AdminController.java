@@ -31,42 +31,22 @@ public class AdminController {
         return "admin";
     }
 
-    @GetMapping("/register")
-    public String registerPage() {
-        return "register";
-    }
-
     @PostMapping("/register")
-    public String saveUser(User user,
-                           @RequestParam("USER") String userRole,
-                           @RequestParam(value = "ADMIN",
-                                         required = false) String adminRole) {
+    public String saveUser(User user, @RequestParam(value="userRoles", required = false) String[] userRoles) {
         if ("".equals(user.getUsername()) ||
-            "".equals(user.getPassword())) {
-            return "register";
+            "".equals(user.getPassword()) ||
+            "".equals(user.getEmail()) ||
+            userRoles.length == 0) {
+            return "redirect:/admin/users";
         }
-        setRoles(user, userRole, adminRole);
+        setRoles(user, userRoles);
         userService.saveUser(user);
         return "redirect:/admin/users";
     }
 
-    @GetMapping("/update")
-    public String updatePage(User user,
-                             @RequestParam("USER") String userRole,
-                             @RequestParam(value = "ADMIN",
-                                           required = false) String adminRole, Model model) {
-        setRoles(user, userRole, adminRole);
-        System.out.println(user.toString());
-        model.addAttribute("user", user);
-        return "update";
-    }
-
     @PostMapping("/update")
-    public String updateUser(User user,
-                             @RequestParam("USER") String userRole,
-                             @RequestParam(value = "ADMIN",
-                                           required = false) String adminRole) {
-        setRoles(user, userRole, adminRole);
+    public String updateUser(User user, @RequestParam("userRoles") String[] userRoles) {
+        setRoles(user, userRoles);
         userService.updateUser(user);
         return "redirect:/admin/users";
     }
@@ -77,12 +57,9 @@ public class AdminController {
         return "redirect:/admin/users";
     }
 
-    private void setRoles(User user, String userRole, String adminRole) {
-        if ("ADMIN".equals(adminRole)) {
-            user.getRoles().add(roleService.getRole("ADMIN"));
-        }
-        if ("USER".equals(userRole)) {
-            user.getRoles().add(roleService.getRole("USER"));
+    private void setRoles(User user, String[] roles) {
+        for (String role : roles) {
+            user.getRoles().add(roleService.getRole(role));
         }
     }
 }

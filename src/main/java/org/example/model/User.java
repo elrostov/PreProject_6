@@ -22,7 +22,9 @@ public class User implements UserDetails {
 
     private String password;
 
-    @ManyToMany(fetch = FetchType.EAGER, cascade = {CascadeType.MERGE})
+    private String email;
+
+    @ManyToMany(fetch = FetchType.EAGER, cascade = {CascadeType.PERSIST})
     @JoinTable(name = "users_roles",
         joinColumns = @JoinColumn(
                 name = "user_id",
@@ -33,7 +35,9 @@ public class User implements UserDetails {
     )
     private Set<Role> roles = new LinkedHashSet<>();
 
-    public User(){}
+
+
+
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
@@ -94,6 +98,14 @@ public class User implements UserDetails {
         this.roles = roles;
     }
 
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -113,6 +125,7 @@ public class User implements UserDetails {
                 "id=" + id +
                 ", username='" + username + '\'' +
                 ", password='" + password + '\'' +
+                ", email='" + email + '\'' +
                 ", roles=" +
                 roles.stream().map(Role::getName).collect(Collectors.joining("; ")) +
                 '}';
